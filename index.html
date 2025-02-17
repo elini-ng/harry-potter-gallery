@@ -88,6 +88,14 @@
 
                     body.style.overflow = 'hidden';
                 });
+
+                imgList.addEventListener('mouseover', function() {
+                    imgList.style.opacity = 0.5;
+                });
+
+                imgList.addEventListener('mouseout', function() {
+                    imgList.style.opacity = 1;
+                });
             }
         })
     </script>

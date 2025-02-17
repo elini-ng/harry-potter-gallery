@@ -40,7 +40,7 @@
     </div>
 
     <script>
-        const imgPath="/img/";
+        const imgPath="img/";
 
         fetch("img_list.txt")
         .then(r=>r.text())
@@ -48,7 +48,6 @@
             imgArr = text.split("\n");
 
             for(var i = 0; i<imgArr.length; i++) {
-                imageName = "img" + i;
                 const imgList = document.createElement('img');
                 imgList.src = imgPath + imgArr[i];
                 imgList.setAttribute("alt","");

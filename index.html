@@ -42,7 +42,7 @@
     <script>
         const imgPath="/img/";
 
-        fetch(imgPath + "img_list.txt")
+        fetch("img_list.txt")
         .then(r=>r.text())
         .then(text => {
             imgArr = text.split("\n");

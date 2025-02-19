@@ -1,27 +1,36 @@
-#mainPage {
+#mainArea {
     height:100vh;
     min-height:700px;
 }
 
-#menuArea {
+#navBar {
     height: 10vh;
-    text-align: right;
     font-size: 12px;
     font-family: Gill Sans;
 }
 
-#menuArea > a {
-    padding-left: 10px;
+#navBar > a {
+    float: right;
+    padding: 10px;
     text-decoration: none;
+    text-align: center;
+    color: black;
+}
+#navBar > a:hover {
+    text-shadow: 1px 1px 2px grey;
+}
+#navBar > a:visited {
+    color: black;
 }
 
-#introArea {
+#mainContent {
     height: 90vh;
 }
 
 .centerText {
     text-align: center;
     font-family: Ink Free, papyrus, Segoe Script;
+    caret-color: transparent;
 }
 
 .imgInText {
@@ -40,7 +49,6 @@
     width: 90vw;
     margin: 0px 5vw;
     animation: animate 10s ease infinite;
-    overflow-y: scroll;
 }
 @keyframes animate {
     0%{
@@ -54,9 +62,29 @@
     }
 }
 
-#galleryArea > h2 {
-    margin-top: 50px;
+#galleryHeader {
+    height:150px;
+}
+
+#galleryHeader > h2 {
+    padding-top: 50px;
     color: ivory;
+}
+
+#galleryHeader > input {
+    margin: 5px;
+    width: 200px;
+    padding: 5px;
+    border-radius: 5px;
+    border-color: transparent;
+}
+
+#imageList {
+    height: calc(100vh - 150px);
+    width: 90vw;
+    overflow-y: auto;
+    scrollbar-color: wheat transparent;
+    scrollbar-gutter: stable;
 }
 
 .imgThumbnail {
@@ -72,8 +100,8 @@
     height: 100vh;
     position: fixed;
     top: 0;
-    left:0;
-    background-color: rgba(0,0,0,0.8);
+    left: 0;
+    background-color: rgba(0,0,0,0.9);
 }
 
 .imgBig {
@@ -92,8 +120,40 @@
 	background-color: transparent;
 	border : 0;
 	float: right;
-    top: 20px;
+    top: 10px;
     right: 50px;
     font-size: 30px;
+    font-family: tahoma;
     cursor: pointer;
+    opacity: 0.5;
+}
+#xButton:hover {
+    opacity: 1;
+}
+
+.arrow {
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    padding: 10px;
+    position: fixed;
+    top: 45vh;
+    opacity: 0.5;
+    cursor: pointer;
+}
+.arrow:hover {
+    opacity: 1;
+}
+
+.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+	float: right;
+    right: 50px;
+}
+
+.left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+	float: left;
+    left: 50px;
 }

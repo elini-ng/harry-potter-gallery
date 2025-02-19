@@ -6,98 +6,203 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="mainPage">
-        <div id="menuArea">
-            <a href="">About</a>
-            <a href="">Feature</a>
-            <a href="">Portfolio</a>
-            <a href="">Contact</a>
-        </div>
-        <div id="introArea" class="centerText">
-            <h3>Welcome to Harry Potter Gallery</h3>
-            <h2>Are you ready to enter wizarding world?</h2>
-            <h5>
-                Step into Diagon Alley and shop your stuff
-                <img class="imgInText" src="img/intro_magicstuff.jpg" alt=""><br>
-                Hop on Hogwarts Express
-                <img class="imgInText" src="img/intro_hogexp_train.jpg" alt="">
-                at platform 9<sup>3/4</sup>
-                <img class="imgInText" src="img/intro_hogexp_platform.jpg" alt=""><br>
-                Get sorted to your house by sorting hat
-                <img class="imgInText" src="img/intro_sortinghat.jpg" alt=""><br>
-                Visit Hogsmeade and get yourself a glass of butter beer
-                <img class="imgInText" src="img/intro_butterbeer.jpg" alt=""><br>
-                And also don't miss Quidditch match!
-                <img class="imgInText" src="img/intro_broomstick.jpg" alt="">
-            </h5>
-        </div>
+<div id="mainArea">
+    <div id="navBar">
+        <a href="#">About</a>
+        <a href="#">Feature</a>
+        <a href="#">Portfolio</a>
+        <a href="#">Contact</a>
     </div>
+    <div id="mainContent" class="centerText">
+        <h3>Welcome to Harry Potter Gallery</h3>
+        <h2>Are you ready to enter wizarding world?</h2>
+        <h5>
+            Step into Diagon Alley and shop your stuff
+            <img class="imgInText" src="img/intro_magicstuff.jpg" alt=""><br>
+            Hop on Hogwarts Express
+            <img class="imgInText" src="img/intro_hogexp_train.jpg" alt="">
+            at platform 9<sup>3/4</sup>
+            <img class="imgInText" src="img/intro_hogexp_platform.jpg" alt=""><br>
+            Get sorted to your house by sorting hat
+            <img class="imgInText" src="img/intro_sortinghat.jpg" alt=""><br>
+            Visit Hogsmeade and get yourself a glass of butter beer
+            <img class="imgInText" src="img/intro_butterbeer.jpg" alt=""><br>
+            And also don't miss Quidditch match!
+            <img class="imgInText" src="img/intro_broomstick.jpg" alt="">
+        </h5>
+    </div>
+</div>
 
-    <div id="galleryArea" class="centerText">
+<div id="galleryArea" class="centerText">
+    <div id="galleryHeader">
         <h2>Harry Potter Gallery</h2>
-        <div id="imageList">
-        </div>
+        <input type="text" id="searchText" name="searchText" placeholder = "key in to search..." autocomplete="off">
     </div>
+    <div id="imageList">
+    </div>
+</div>
 
-    <script>
+<script>
+    let imgListArr = [];
+
+    //Get image list from file and load all images
+    fetch("img_list.txt")
+    .then(r=>r.text())
+    .then(text => {
+        imgListArr = text.split("\n");
+        imgListToDisplay = filterImageList('');
+        DisplayImage(imgListToDisplay);
+    })
+
+    //Load images based on keyword
+    document.getElementById("searchText").addEventListener("keyup", function(event) {
+        imgListToDisplay = filterImageList (this.value);
+        DisplayImage(imgListToDisplay);
+    })
+
+    //Filter image list
+    function filterImageList (keyword) {
+        var filteredList = [];
+        var j=0;
+        for(var i = 0; i<imgListArr.length; i++) {
+            imgInfo = imgListArr[i].split(";");
+            if (imgInfo[1]) {
+                if (keyword === '' || (keyword !== '' && imgInfo[1].toLowerCase().match(keyword.toLowerCase()))) {
+                   filteredList[j] = imgInfo[0];
+                   j++;
+                }
+            }
+        }
+        return filteredList;
+    }
+
+    //Display thumbnail images
+    function DisplayImage(imgArr) {
         const imgPath="img/gallery_img/";
 
-        //Get image list
-        fetch("img_list.txt")
-        .then(r=>r.text())
-        .then(text => {
-            imgArr = text.split("\n");
+        const imgNode = document.getElementById("imageList");
+        imgNode.innerHTML = '';
 
-            //Loop image list and then create element to generate thumbnail images
-            for(var i = 0; i<imgArr.length; i++) {
-                const imgList = document.createElement('img');
-                imgList.src = imgPath + imgArr[i];
-                imgList.setAttribute("alt","");
-                imgList.setAttribute("id",imgArr[i]);
-                imgList.setAttribute("class","imgThumbnail");
-                imageList.appendChild(imgList);
+        //Create element for each image
+        for(var i = 0; i<imgArr.length; i++) {
+            const imgList = document.createElement('img');
+            imgList.src = imgPath + imgArr[i];
+            imgList.setAttribute("alt","");
+            imgList.setAttribute("id",imgArr[i]);
+            imgList.setAttribute("class","imgThumbnail");
+            imageList.appendChild(imgList);
 
-                //On each thumbnail image, add click event to pop up bigger image
-                imgList.addEventListener('click', function(e) {
-                    //Create box to contain big image
-                    const boxElement = document.createElement('div');
-                    boxElement.setAttribute("id","imgBox");
-                    boxElement.setAttribute("class","boxPopUp");
-                    galleryArea.appendChild(boxElement);
+            //Change opacity when point on thumbnail image
+            imgList.addEventListener('mouseover', function() {
+                imgList.style.opacity = 0.5;
+            });
+            imgList.addEventListener('mouseout', function() {
+                imgList.style.opacity = 1;
+            });
 
-                    //Add close button on big image box
-                    const xButton = document.createElement('button');
-                    xButton.setAttribute("id","xButton");
-                    xButton.textContent  = "x";
+            //Add click event to pop up bigger image
+            imgList.addEventListener('click', function(e) {
+                //Disable main body scroll when image pop up
+                var body = document.getElementsByTagName('body')[0];
+                body.style.overflow = 'hidden';
 
-                    var body = document.getElementsByTagName('body')[0];
+                //1. Create box to contain big image
+                const boxElement = document.createElement('div');
+                boxElement.setAttribute("id","imgBox");
+                boxElement.setAttribute("class","boxPopUp");
+                imageList.appendChild(boxElement);
 
-                    xButton.addEventListener('click', function(e) {
-                        boxElement.parentNode.removeChild(boxElement);
-                        body.style.overflow = '';
-                    });
+                //2. Add close button on big image box
+                const xButton = document.createElement('button');
+                xButton.setAttribute("id","xButton");
+                xButton.innerHTML  = "&times;";
 
-                    imgBox.appendChild(xButton);
+                xButton.addEventListener('click', function(e) {
+                    boxElement.parentNode.removeChild(boxElement);
+                    body.style.overflow = '';
+                });
+                imgBox.appendChild(xButton);
 
-                    //Display big image
-                    const imgElement = document.createElement('img');
-                    imgElement.src = imgPath + e.srcElement.id;
+                //3. Display big image
+                const imgElement = document.createElement('img');
+                imgElement.src = imgPath + e.srcElement.id;
+                imgElement.setAttribute("id",e.srcElement.id);
+                imgElement.setAttribute("alt","");
+                imgElement.setAttribute("class","imgBig");
+                imgBox.appendChild(imgElement);
+
+                //4. Add next and previous button and trigger by click
+                const nextButton = document.createElement('i');
+                nextButton.setAttribute("class","arrow right");
+                nextButton.setAttribute("id","nextButton");
+                imgBox.appendChild(nextButton);
+
+                nextButton.addEventListener('click',function(event) {
+                    MoveImg("next");
+                });
+
+                const previousButton = document.createElement('i');
+                previousButton.setAttribute("class","arrow left");
+                previousButton.setAttribute("id","previousButton");
+                imgBox.appendChild(previousButton);
+
+                previousButton.addEventListener('click',function(event) {
+                    MoveImg("previous");
+                });
+
+                var imgIdx = imgArr.indexOf(e.srcElement.id);
+                ShowHideArrowButton(imgIdx);
+
+                //Trigger move next or previous using keyboard right or left key
+                window.addEventListener('keydown',function(event) {
+                    if (document.getElementById("imgBox") !== null) {
+                        switch (event.key) {
+                            case "ArrowRight":
+                                MoveImg("next");
+                                break;
+                            case "ArrowLeft":
+                                MoveImg("previous");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+
+                //Function to move to next or previous image
+                function MoveImg(moveTo) {
+                    if (moveTo === "next") {
+                        imgIdx++;
+                    } else {
+                        imgIdx--;
+                    }
+
+                    imgElement.parentNode.removeChild(imgElement);
+                    imgElement.src = imgPath + imgArr[imgIdx];
                     imgElement.setAttribute("alt","");
                     imgElement.setAttribute("class","imgBig");
                     imgBox.appendChild(imgElement);
 
-                    body.style.overflow = 'hidden';
-                });
+                    ShowHideArrowButton(imgIdx);
+                }
+            });
+        }
 
-                imgList.addEventListener('mouseover', function() {
-                    imgList.style.opacity = 0.5;
-                });
-
-                imgList.addEventListener('mouseout', function() {
-                    imgList.style.opacity = 1;
-                });
+        function ShowHideArrowButton(imgIdx) {
+            if (imgIdx === 0) {
+                document.getElementById("previousButton").style.visibility = "hidden";
+            } else {
+                document.getElementById("previousButton").style.visibility = "visible";
             }
-        })
-    </script>
+
+            if (imgIdx === imgArr.length-1) {
+                document.getElementById("nextButton").style.visibility = "hidden";
+            } else {
+                document.getElementById("nextButton").style.visibility = "visible";
+            }
+        }
+
+    }
+</script>
 </body>
 </html>

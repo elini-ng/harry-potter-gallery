@@ -1,20 +1,20 @@
-img1.jpg
-img2.jpg
-img3.jpg
-img4.jpg
-img5.jpg
-img6.jpg
-img7.jpg
-img8.jpg
-img9.jpg
-img10.jpg
-img11.jpg
-img12.jpg
-img13.jpg
-img14.jpg
-img15.jpg
-img16.jpg
-img17.jpg
-img18.jpg
-img19.jpg
-img20.jpg
+img1.jpg;Harry Potter
+img2.jpg;Hermione Granger
+img3.jpg;Ron Weasley
+img4.jpg;Rubeus Hagrid
+img5.jpg;Albus Dumbledore
+img6.jpg;McGonagall
+img7.jpg;Lupin#Moony
+img8.jpg;Severus Snape
+img9.jpg;Sirius#Padfoot
+img10.jpg;Dobby
+img11.jpg;Ginny Weasley
+img12.jpg;Draco Malfoy
+img13.jpg;Lucius Malfoy
+img14.jpg;Voldemort#Tom Marvolo Riddle
+img15.jpg;Belatrix Lestrange
+img16.jpg;Fred Weasley#George Weasley
+img17.jpg;Luna Lovegood
+img18.jpg;Neville Longbottom
+img19.jpg;Cedric Diggory
+img20.jpg;Cho Chang

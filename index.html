@@ -18,17 +18,18 @@
         <h2>Are you ready to enter wizarding world?</h2>
         <h5>
             Step into Diagon Alley and shop your stuff
-            <img class="imgInText" src="img/intro_magicstuff.jpg" alt=""><br>
+            <img class="imgInText" src="img/intro_magicstuff.jpg" alt="intro_magicstuff.jpg"><br>
             Hop on Hogwarts Express
-            <img class="imgInText" src="img/intro_hogexp_train.jpg" alt="">
+            <img class="imgInText" src="img/intro_hogexp_train.jpg" alt="intro_hogexp_train.jpg">
             at platform 9<sup>3/4</sup>
-            <img class="imgInText" src="img/intro_hogexp_platform.jpg" alt=""><br>
+            <img class="imgInText" src="img/intro_hogexp_platform.jpg" alt="intro_hogexp_platform.jpg"><br>
             Get sorted to your house by sorting hat
-            <img class="imgInText" src="img/intro_sortinghat.jpg" alt=""><br>
+            <img class="imgInText" src="img/intro_sortinghat.jpg" alt="intro_sortinghat.jpg"><br>
             Visit Hogsmeade and get yourself a glass of butter beer
-            <img class="imgInText" src="img/intro_butterbeer.jpg" alt=""><br>
-            And also don't miss Quidditch match!
-            <img class="imgInText" src="img/intro_broomstick.jpg" alt="">
+            <img class="imgInText" src="img/intro_butterbeer.jpg" alt="intro_butterbeer.jpg"><br>
+            And also don't miss the exciting Quidditch match!
+            <img class="imgInText" src="img/intro_broomstick.jpg" alt="intro_broomstick.jpg"><br>
+            <button id="moreButton" class="centerText" onClick="GoToGallery()">View More</button>
         </h5>
     </div>
 </div>
@@ -43,6 +44,10 @@
 </div>
 
 <script>
+    function GoToGallery() {
+        window.scrollTo(0,document.documentElement.scrollHeight);
+    }
+
     let imgListArr = [];
 
     //Get image list from file and load all images
@@ -80,28 +85,29 @@
     function DisplayImage(imgArr) {
         const imgPath="img/gallery_img/";
 
+        //Remove content of image thumbnail
         const imgNode = document.getElementById("imageList");
         imgNode.innerHTML = '';
 
         //Create element for each image
         for(var i = 0; i<imgArr.length; i++) {
-            const imgList = document.createElement('img');
-            imgList.src = imgPath + imgArr[i];
-            imgList.setAttribute("alt","");
-            imgList.setAttribute("id",imgArr[i]);
-            imgList.setAttribute("class","imgThumbnail");
-            imageList.appendChild(imgList);
+            const imgThumbnail = document.createElement('img');
+            imgThumbnail.src = imgPath + imgArr[i];
+            imgThumbnail.setAttribute("id","th_" + imgArr[i]);
+            imgThumbnail.setAttribute("alt",imgArr[i]);
+            imgThumbnail.setAttribute("class","imgThumbnail");
+            imageList.appendChild(imgThumbnail);
 
             //Change opacity when point on thumbnail image
-            imgList.addEventListener('mouseover', function() {
-                imgList.style.opacity = 0.5;
+            imgThumbnail.addEventListener('mouseover', function() {
+                imgThumbnail.style.opacity = 0.5;
             });
-            imgList.addEventListener('mouseout', function() {
-                imgList.style.opacity = 1;
+            imgThumbnail.addEventListener('mouseout', function() {
+                imgThumbnail.style.opacity = 1;
             });
 
             //Add click event to pop up bigger image
-            imgList.addEventListener('click', function(e) {
+            imgThumbnail.addEventListener('click', function(e) {
                 //Disable main body scroll when image pop up
                 var body = document.getElementsByTagName('body')[0];
                 body.style.overflow = 'hidden';
@@ -125,9 +131,10 @@
 
                 //3. Display big image
                 const imgElement = document.createElement('img');
-                imgElement.src = imgPath + e.srcElement.id;
-                imgElement.setAttribute("id",e.srcElement.id);
-                imgElement.setAttribute("alt","");
+                var imgId = e.srcElement.id.replace("th_","")
+                imgElement.src = imgPath + imgId;
+                imgElement.setAttribute("id",imgId);
+                imgElement.setAttribute("alt",imgId);
                 imgElement.setAttribute("class","imgBig");
                 imgBox.appendChild(imgElement);
 
@@ -150,8 +157,8 @@
                     MoveImg("previous");
                 });
 
-                var imgIdx = imgArr.indexOf(e.srcElement.id);
-                ShowHideArrowButton(imgIdx);
+                ShowHideArrowButton(imgId);
+
 
                 //Trigger move next or previous using keyboard right or left key
                 window.addEventListener('keydown',function(event) {
@@ -169,39 +176,49 @@
                     }
                 });
 
-                //Function to move to next or previous image
-                function MoveImg(moveTo) {
-                    if (moveTo === "next") {
-                        imgIdx++;
-                    } else {
-                        imgIdx--;
-                    }
-
-                    imgElement.parentNode.removeChild(imgElement);
-                    imgElement.src = imgPath + imgArr[imgIdx];
-                    imgElement.setAttribute("alt","");
-                    imgElement.setAttribute("class","imgBig");
-                    imgBox.appendChild(imgElement);
-
-                    ShowHideArrowButton(imgIdx);
-                }
             });
         }
 
-        function ShowHideArrowButton(imgIdx) {
-            if (imgIdx === 0) {
+        //Function to show or hide arrow button
+        function ShowHideArrowButton(imgId) {
+            var idx = imgArr.indexOf(imgId);
+
+            if (idx === 0) {
                 document.getElementById("previousButton").style.visibility = "hidden";
             } else {
                 document.getElementById("previousButton").style.visibility = "visible";
             }
 
-            if (imgIdx === imgArr.length-1) {
+            if (idx === imgArr.length-1) {
                 document.getElementById("nextButton").style.visibility = "hidden";
             } else {
                 document.getElementById("nextButton").style.visibility = "visible";
             }
         }
 
+        //Function to move to next or previous image
+        function MoveImg(moveTo) {
+            currentImg = document.getElementById("imgBox").querySelectorAll(".imgBig")[0];
+            idx = imgArr.indexOf(currentImg.id);
+
+            if (moveTo === "next" && idx !== imgArr.length-1) {
+                idx++;
+            } else if (moveTo === "previous" && idx !== 0) {
+                idx--;
+            } else {
+                return;
+            }
+
+             //Replace current display image with new one
+            currentImg.parentNode.removeChild(currentImg);
+            currentImg.src = imgPath + imgArr[idx];
+            currentImg.setAttribute("id", imgArr[idx]);
+            currentImg.setAttribute("alt","");
+            currentImg.setAttribute("class","imgBig");
+            imgBox.appendChild(currentImg);
+
+            ShowHideArrowButton(currentImg.id);
+        }
     }
 </script>
 </body>

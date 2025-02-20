@@ -6,7 +6,7 @@
 #navBar {
     height: 10vh;
     font-size: 12px;
-    font-family: Gill Sans;
+    font-family: Gill Sans, Verdana;
 }
 
 #navBar > a {
@@ -42,6 +42,19 @@
 
 .imgInText:hover {
     transform: rotate(45deg);
+}
+
+#moreButton {
+    margin: 10px;
+    padding: 10px 20px;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: lightgrey;
+    font-weight: bold;
+    cursor: pointer;
+}
+#moreButton:hover {
+    background-color: darkgrey;
 }
 
 #galleryArea {

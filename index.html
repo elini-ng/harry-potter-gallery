@@ -49,20 +49,22 @@
     }
 
     let imgListArr = [];
+    let imgArr= [];
+    const imgPath="img/gallery_img/";
 
     //Get image list from file and load all images
     fetch("img_list.txt")
     .then(r=>r.text())
     .then(text => {
         imgListArr = text.split("\n");
-        imgListToDisplay = filterImageList('');
-        DisplayImage(imgListToDisplay);
+        filterImageList('');
+        DisplayImage();
     })
 
     //Load images based on keyword
     document.getElementById("searchText").addEventListener("keyup", function(event) {
-        imgListToDisplay = filterImageList (this.value);
-        DisplayImage(imgListToDisplay);
+        filterImageList (this.value);
+        DisplayImage();
     })
 
     //Filter image list
@@ -78,13 +80,11 @@
                 }
             }
         }
-        return filteredList;
+        imgArr = filteredList;
     }
 
     //Display thumbnail images
-    function DisplayImage(imgArr) {
-        const imgPath="img/gallery_img/";
-
+    function DisplayImage() {
         //Remove content of image thumbnail
         const imgNode = document.getElementById("imageList");
         imgNode.innerHTML = '';
@@ -158,68 +158,67 @@
                 });
 
                 ShowHideArrowButton(imgId);
-
-
-                //Trigger move next or previous using keyboard right or left key
-                window.addEventListener('keydown',function(event) {
-                    if (document.getElementById("imgBox") !== null) {
-                        switch (event.key) {
-                            case "ArrowRight":
-                                MoveImg("next");
-                                break;
-                            case "ArrowLeft":
-                                MoveImg("previous");
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                });
-
             });
         }
+    }
 
-        //Function to show or hide arrow button
-        function ShowHideArrowButton(imgId) {
-            var idx = imgArr.indexOf(imgId);
 
-            if (idx === 0) {
-                document.getElementById("previousButton").style.visibility = "hidden";
-            } else {
-                document.getElementById("previousButton").style.visibility = "visible";
-            }
-
-            if (idx === imgArr.length-1) {
-                document.getElementById("nextButton").style.visibility = "hidden";
-            } else {
-                document.getElementById("nextButton").style.visibility = "visible";
+    //Trigger move next or previous using keyboard right or left key
+    window.addEventListener('keydown',function(event){
+        if (document.getElementById("imgBox") !== null) {
+            switch (event.key) {
+                case "ArrowRight":
+                    MoveImg("next");
+                    break;
+                case "ArrowLeft":
+                    MoveImg("previous");
+                    break;
+                default:
+                    break;
             }
         }
+    });
 
-        //Function to move to next or previous image
-        function MoveImg(moveTo) {
-            currentImg = document.getElementById("imgBox").querySelectorAll(".imgBig")[0];
-            idx = imgArr.indexOf(currentImg.id);
+    //Function to move to next or previous image
+    function MoveImg(moveTo) {
+        currentImg = document.getElementById("imgBox").querySelectorAll(".imgBig")[0];
+        idx = imgArr.indexOf(currentImg.id);
+        if (moveTo === "next" && idx !== imgArr.length-1) {
+            idx++;
+        } else if (moveTo === "previous" && idx !== 0) {
+            idx--;
+        } else {
+            return;
+        }
 
-            if (moveTo === "next" && idx !== imgArr.length-1) {
-                idx++;
-            } else if (moveTo === "previous" && idx !== 0) {
-                idx--;
-            } else {
-                return;
-            }
+        //Replace current display image with new one
+        currentImg.parentNode.removeChild(currentImg);
+        currentImg.src = imgPath + imgArr[idx];
+        currentImg.setAttribute("id", imgArr[idx]);
+        currentImg.setAttribute("alt","");
+        currentImg.setAttribute("class","imgBig");
+        imgBox.appendChild(currentImg);
 
-             //Replace current display image with new one
-            currentImg.parentNode.removeChild(currentImg);
-            currentImg.src = imgPath + imgArr[idx];
-            currentImg.setAttribute("id", imgArr[idx]);
-            currentImg.setAttribute("alt","");
-            currentImg.setAttribute("class","imgBig");
-            imgBox.appendChild(currentImg);
+        ShowHideArrowButton(currentImg.id);
+    }
 
-            ShowHideArrowButton(currentImg.id);
+    //Function to show or hide arrow button
+    function ShowHideArrowButton(imgId) {
+        var idx = imgArr.indexOf(imgId);
+
+        if (idx === 0) {
+            document.getElementById("previousButton").style.visibility = "hidden";
+        } else {
+            document.getElementById("previousButton").style.visibility = "visible";
+        }
+
+        if (idx === imgArr.length-1) {
+            document.getElementById("nextButton").style.visibility = "hidden";
+        } else {
+            document.getElementById("nextButton").style.visibility = "visible";
         }
     }
+
 </script>
 </body>
 </html>

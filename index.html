@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Harry Potter</title>
     <link rel="stylesheet" href="css/style.css">
+    <meta name="description" content="Harry Potter Gallery contains movie characters and scenes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 <div id="mainArea">
@@ -14,9 +16,9 @@
         <a href="#">Contact</a>
     </div>
     <div id="mainContent" class="centerText">
-        <h3>Welcome to Harry Potter Gallery</h3>
+        <h1>Welcome to Harry Potter Gallery</h1>
         <h2>Are you ready to enter wizarding world?</h2>
-        <h5>
+        <p class="mainIntro">
             Step into Diagon Alley and shop your stuff
             <img class="imgInText" src="img/intro_magicstuff.jpg" alt="intro_magicstuff.jpg"><br>
             Hop on Hogwarts Express
@@ -30,7 +32,7 @@
             And also don't miss the exciting Quidditch match!
             <img class="imgInText" src="img/intro_broomstick.jpg" alt="intro_broomstick.jpg"><br>
             <button id="moreButton" class="centerText" onClick="GoToGallery()">View More</button>
-        </h5>
+        </p>
     </div>
 </div>
 
@@ -48,40 +50,25 @@
         window.scrollTo(0,document.documentElement.scrollHeight);
     }
 
-    let imgListArr = [];
-    let imgArr= [];
+    let imgList;
+    let imgArr;
     const imgPath="img/gallery_img/";
 
     //Get image list from file and load all images
-    fetch("img_list.txt")
-    .then(r=>r.text())
-    .then(text => {
-        imgListArr = text.split("\n");
-        filterImageList('');
+    fetch('./img_list.json')
+    .then(response => response.json())
+    .then(data => {
+        imgList = data;
+        imgArr = data;
         DisplayImage();
     })
+    .catch(error => console.error('Fail to get json file:', error));
 
     //Load images based on keyword
     document.getElementById("searchText").addEventListener("keyup", function(event) {
-        filterImageList (this.value);
+        imgArr = imgList.filter(c => c.keyword.toLowerCase().includes(this.value.toLowerCase()));
         DisplayImage();
     })
-
-    //Filter image list
-    function filterImageList (keyword) {
-        var filteredList = [];
-        var j=0;
-        for(var i = 0; i<imgListArr.length; i++) {
-            imgInfo = imgListArr[i].split(";");
-            if (imgInfo[1]) {
-                if (keyword === '' || (keyword !== '' && imgInfo[1].toLowerCase().match(keyword.toLowerCase()))) {
-                   filteredList[j] = imgInfo[0];
-                   j++;
-                }
-            }
-        }
-        imgArr = filteredList;
-    }
 
     //Display thumbnail images
     function DisplayImage() {
@@ -92,9 +79,9 @@
         //Create element for each image
         for(var i = 0; i<imgArr.length; i++) {
             const imgThumbnail = document.createElement('img');
-            imgThumbnail.src = imgPath + imgArr[i];
-            imgThumbnail.setAttribute("id","th_" + imgArr[i]);
-            imgThumbnail.setAttribute("alt",imgArr[i]);
+            imgThumbnail.src = imgPath + imgArr[i].name;
+            imgThumbnail.setAttribute("id","th_" + imgArr[i].name);
+            imgThumbnail.setAttribute("alt",imgArr[i].name);
             imgThumbnail.setAttribute("class","imgThumbnail");
             imageList.appendChild(imgThumbnail);
 
@@ -162,9 +149,8 @@
         }
     }
 
-
     //Trigger move next or previous using keyboard right or left key
-    window.addEventListener('keydown',function(event){
+    window.addEventListener('keydown',function(event) {
         if (document.getElementById("imgBox") !== null) {
             switch (event.key) {
                 case "ArrowRight":
@@ -182,7 +168,7 @@
     //Function to move to next or previous image
     function MoveImg(moveTo) {
         currentImg = document.getElementById("imgBox").querySelectorAll(".imgBig")[0];
-        idx = imgArr.indexOf(currentImg.id);
+        idx = imgArr.findIndex(obj => obj.name==currentImg.id);
         if (moveTo === "next" && idx !== imgArr.length-1) {
             idx++;
         } else if (moveTo === "previous" && idx !== 0) {
@@ -193,9 +179,9 @@
 
         //Replace current display image with new one
         currentImg.parentNode.removeChild(currentImg);
-        currentImg.src = imgPath + imgArr[idx];
-        currentImg.setAttribute("id", imgArr[idx]);
-        currentImg.setAttribute("alt","");
+        currentImg.src = imgPath + imgArr[idx].name;
+        currentImg.setAttribute("id", imgArr[idx].name);
+        currentImg.setAttribute("alt",imgArr[idx].name);
         currentImg.setAttribute("class","imgBig");
         imgBox.appendChild(currentImg);
 
@@ -204,7 +190,7 @@
 
     //Function to show or hide arrow button
     function ShowHideArrowButton(imgId) {
-        var idx = imgArr.indexOf(imgId);
+        var idx = imgArr.findIndex(obj => obj.name==imgId);
 
         if (idx === 0) {
             document.getElementById("previousButton").style.visibility = "hidden";

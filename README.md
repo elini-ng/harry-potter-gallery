@@ -1,13 +1,14 @@
 # harry-potter-gallery
 
-harry-potter-gallery is a website to show pictures of characters or scene in Harry Potter's movie.
-<br/><br/>
-## Manage Image
-1. Add or remove or replace image in img/gallery_img directory. 
+harry-potter-gallery is a website to show pictures of characters or scenes in Harry Potter's movie.
+<br/>
 
-2. Find img_list.json file under root directory and edit the content accordingly.
+## How to Manage Images
+1. Go to img/gallery_img directory.
+2. Add or remove or replace image(s) in the directory.
+3. Find img_list.json file under root directory and then edit the content accordingly.
    - Images are shown on website according to the sequence in the file.
-
+   - Refer to below format and example of img_list.json file
 <br/>
 
 ```
@@ -24,7 +25,6 @@ Format:
    }
 ]
 ```
-<br/>
 
 > - image_name is actual image name with extension in img/gallery_img directory.
 > - keyword is the image information which is used for searching image by keyword.

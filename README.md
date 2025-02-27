@@ -1,9 +1,16 @@
 # harry-potter-gallery
 
 harry-potter-gallery is a website to show pictures of characters or scenes in Harry Potter's movie.
+<br/><br/>
+
+## Technologies Used
+- HTML
+- Javascript
+- CSS
 <br/>
 
-## How to Manage Images
+## Usage Instruction
+### Maintaining Gallery Images
 1. Go to img/gallery_img directory.
 2. Add or remove or replace image(s) in the directory.
 3. Find img_list.json file under root directory and then edit the content accordingly.
